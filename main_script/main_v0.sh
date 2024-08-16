@@ -7,67 +7,55 @@
 # USAGE:            ./main_v0.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.1.0
+# VERSION:          0.2.0
 #====================================================
 
-# Function to display the menu
-show_menu() {
-    echo "------------------------------------"
-    echo "           System Monitor"
-    echo "------------------------------------"
-    echo "Please select an option: "
-    echo
-    echo "1. who"
-    echo
-    echo "2. last"
-    echo
-    echo "3. ulimit -a"
-    echo
-    echo "4. env"
-    echo
-    echo "5. id"
-    echo "------------------------------------"
+# Define the initial array with command options
+options=("who" "last" "ulimit -a" "env" "id")
+
+# Function to display current options
+show_options() {
+    echo "Available options:"
+    local index=1
+    for opt in "${options[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
 }
- 
-# Function to handle user input
-get_choice() {
+
+# Function to promt the user to select an option
+get_selection() {
+    local prompt="$1"
     local choice
-    read -p "Enter your choice [1-3]: " choice
-    echo "$choice"
+    while :; do
+        read -rp "$prompt" choice
+        if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice >=1 && choice <= ${#options[@]}));
+        then
+            echo "${options[$((choice - 1))]}"
+            return 
+        else
+            echo "Invalid input. Please enter a number between 1 and ${#options[@]}."
+        fi
+    done
 }
 
+# Array to store user-selected options
+selected_options=()
 
-# Main script logic
-while true; 
-do 
-    show_menu
-    user_choice=$(get_choice)
+# Loop to get 4 unique options from the user
+for i in {1..4}; do
+    clear
+    show_options
+    selected=$(get_selection "Select option $i: ")
+    selected_options+=("$selected")
 
-    case $user_choice in
+    # Remove selected option from the available options
+    options=("${options[@]/$selected/}")
+done
 
-        1)  
-            echo "You chose 1"
-            # Call bash script 1
-            ;;
-        2) 
-            echo "You chose 2"
-            # Call bash script 2
-            ;;
-        3) 
-            echo "You chose 3"
-            # Call bash script 3
-            ;;
-        4) 
-            echo "You chose 4"
-            # Call bash script 4
-            ;;
-        5)
-            echo "You chose 5"
-            # Call bash script 5
-            ;;
-        *)  echo "You chose an invalid option, please choose a number between 1 and 5."
-            # In case no number is given
-            ;;
-    esac
+# Display the selections of the user
+echo "You selected:"
+for option in "${selected_options[@]}"; do 
+    echo "$option"
 done
 
