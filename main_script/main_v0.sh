@@ -7,48 +7,67 @@
 # USAGE:            ./main_v0.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.0.0
+# VERSION:          0.1.0
 #====================================================
 
 # Function to display the menu
 show_menu() {
-    PS3="Select an option please [1-5]: "
-    options=("Option who/n" "Option last" "Option ulimit -a" "Option env" "Option id")
-    
-    select option in "${options[@]}"; do
-        case $REPLY in
-            1)  
-                echo "You chose 1"
-                # Call bash script 1
-                ;;
-            2) 
-                echo "You chose 2"
-                # Call bash script 2
-                ;;
-            3) 
-                echo "You chose 3"
-                # Call bash script 3
-                ;;
-            4) 
-                echo "You chose 4"
-                # Call bash script 4
-                ;;
-            5)
-                echo "You chose 5"
-                # Call bash script 5
-                ;;
-            *)  echo "You chose an invalid option, please choose a number between 1 and 5."
-                # In case no number is given
-                ;;
-        esac
-    done
+    echo "------------------------------------"
+    echo "           System Monitor"
+    echo "------------------------------------"
+    echo "Please select an option: "
+    echo
+    echo "1. who"
+    echo
+    echo "2. last"
+    echo
+    echo "3. ulimit -a"
+    echo
+    echo "4. env"
+    echo
+    echo "5. id"
+    echo "------------------------------------"
+}
+ 
+# Function to handle user input
+get_choice() {
+    local choice
+    read -p "Enter your choice [1-3]: " choice
+    echo "$choice"
 }
 
-# Main script loop
-while true; do
-    clear
+
+# Main script logic
+while true; 
+do 
     show_menu
-    echo -n "Please press enter to return to the menu.."
-    read -r 
+    user_choice=$(get_choice)
+
+    case $user_choice in
+
+        1)  
+            echo "You chose 1"
+            # Call bash script 1
+            ;;
+        2) 
+            echo "You chose 2"
+            # Call bash script 2
+            ;;
+        3) 
+            echo "You chose 3"
+            # Call bash script 3
+            ;;
+        4) 
+            echo "You chose 4"
+            # Call bash script 4
+            ;;
+        5)
+            echo "You chose 5"
+            # Call bash script 5
+            ;;
+        *)  echo "You chose an invalid option, please choose a number between 1 and 5."
+            # In case no number is given
+            ;;
+    esac
 done
 
