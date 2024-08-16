@@ -7,7 +7,7 @@
 # USAGE:            ./main_v0.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.6.0
+# VERSION:          0.7.0
 #====================================================
 
 # Define the initial array with command options
@@ -59,7 +59,6 @@ while [ ${#selected_options[@]} -lt 4 ]; do
 
     echo "Select option $((${#selected_options[@]} + 1)): "
     get_selection
-    #selection=$(get_selection "Select option $((${#selected_options[@]} + 1)): ")
     
     # Retrieve the selected option
     selected_option="${options[$((global_var_selection - 1))]}"
@@ -78,8 +77,6 @@ while [ ${#selected_options[@]} -lt 4 ]; do
             fi
         done
         options=("${new_options[@]}")
-
-
     fi
 done
 
