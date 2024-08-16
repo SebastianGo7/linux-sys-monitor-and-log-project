@@ -7,7 +7,7 @@
 # USAGE:            ./main_v0.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.5.0
+# VERSION:          0.6.0
 #====================================================
 
 # Define the initial array with command options
@@ -31,13 +31,10 @@ get_selection() {
         read -rp "$prompt" choice
         if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice >= 1 && choice <= ${#options[@]}));
         then
-            echo "$choice"
             global_var_selection=($choice)
-            echo "Te1"
             return 
         else
             echo "Invalid input. Please enter a number between 1 and ${#options[@]}."
-            echo "Te2"
         fi
     done
 }
@@ -63,10 +60,9 @@ while [ ${#selected_options[@]} -lt 4 ]; do
     echo "Select option $((${#selected_options[@]} + 1)): "
     get_selection
     #selection=$(get_selection "Select option $((${#selected_options[@]} + 1)): ")
-
+    
     # Retrieve the selected option
-    selected_option="${options[$((selection - 1))]}"
-
+    selected_option="${options[$((global_var_selection - 1))]}"
 
     # Check if the selected option is already chosen
     if [[ " ${selected_options[*]} " == *" $selected_option "* ]]; then
@@ -94,4 +90,3 @@ for option in "${selected_options[@]}"; do
     echo "$option"
 done
 
-####1411
