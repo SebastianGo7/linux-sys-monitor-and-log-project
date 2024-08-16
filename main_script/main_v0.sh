@@ -7,7 +7,7 @@
 # USAGE:            ./main_v0.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.2.0
+# VERSION:          0.3.0
 #====================================================
 
 # Define the initial array with command options
@@ -29,9 +29,9 @@ get_selection() {
     local choice
     while :; do
         read -rp "$prompt" choice
-        if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice >=1 && choice <= ${#options[@]}));
+        if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice >= 1 && choice <= ${#options[@]}));
         then
-            echo "${options[$((choice - 1))]}"
+            echo "$choice"
             return 
         else
             echo "Invalid input. Please enter a number between 1 and ${#options[@]}."
@@ -43,15 +43,25 @@ get_selection() {
 selected_options=()
 
 # Loop to get 4 unique options from the user
-for i in {1..4}; do
+while [ ${#selected_options[@]} -lt 4 ]; do
     clear
     show_options
-    selected=$(get_selection "Select option $i: ")
-    selected_options+=("$selected")
+    selection=$(get_selection "Select option $((${#selected_options[@]} + 1)): ")
 
-    # Remove selected option from the available options
-    options=("${options[@]/$selected/}")
+    # Retrieve the selected option
+    selected_option="${options[$((selection - 1))]}"
+
+    # Check if the selected option is already chosen
+    if [[ " ${selected_options[*]} " == *" $selected_option "* ]]; then
+        echo "Option '$selected_option' is already selected. Please choose a different opt"
+    else
+        selected_options+=("$selected_option")
+
+        # remove the selected option from the available options
+        options=("${options[@]/$selected_option/}")
+    fi
 done
+
 
 # Display the selections of the user
 echo "You selected:"
