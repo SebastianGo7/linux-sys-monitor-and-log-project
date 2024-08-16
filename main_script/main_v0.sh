@@ -7,7 +7,7 @@
 # USAGE:            ./main_v0.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.3.0
+# VERSION:          0.4.0
 #====================================================
 
 # Define the initial array with command options
@@ -53,12 +53,20 @@ while [ ${#selected_options[@]} -lt 4 ]; do
 
     # Check if the selected option is already chosen
     if [[ " ${selected_options[*]} " == *" $selected_option "* ]]; then
-        echo "Option '$selected_option' is already selected. Please choose a different opt"
+        echo "Option '$selected_option' is already selected. Please choose a different option."
     else
         selected_options+=("$selected_option")
 
         # remove the selected option from the available options
-        options=("${options[@]/$selected_option/}")
+        new_options=()
+        for opt in "${options[@]}"; do
+            if [[ "$opt" != "$selected_option" ]]; then
+                new_options+=("$opt")
+            fi
+        done
+        options=("${new_options[@]}")
+
+
     fi
 done
 
@@ -68,4 +76,3 @@ echo "You selected:"
 for option in "${selected_options[@]}"; do 
     echo "$option"
 done
-
