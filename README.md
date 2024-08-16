@@ -21,12 +21,11 @@ Choose System Metrics and create Docs SystemMetrics_v0 and v1
 Create README File
 
 2) Initial Development 
-Start Developing Main Script
-Implement and integrate 5 individual metric scripts to display separate tables 
+Start Developing Main Script: Implementing user input selection menu
 Update Files if relevant changes
 
 3) First Dashboard elements
-Improve Main Script to include initial dashboard elements
+Improve Main Script: Display System monitor dashboard with tmux
 Update Files if relevant changes
 
 4) Text parsing integration
