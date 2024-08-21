@@ -4,7 +4,7 @@
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
 # DATE:             2024-08-21
-# USAGE:            ./main_v0.sh
+# USAGE:            ./main_v1.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
 # VERSION:          0.4.0
