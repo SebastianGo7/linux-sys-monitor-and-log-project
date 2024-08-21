@@ -7,40 +7,50 @@
 # USAGE:            ./main_v1.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.1.0
+# VERSION:          0.2.0
 #====================================================
 
-# tmux division into 4 parts
+# tmux division into 6 parts, 3x2, upper two should only take about 20%
+# the middle and lower each about 40% of the vertical length.
 
 # Define session name
-SESSION_NAME="grid_session_2x2_2"
+SESSION_NAME="grid_session_3x2"
 
 # Create a new tmux session with a specified name, and start it in detach mode
 tmux new-session -d -s $SESSION_NAME
 
 # Split the window into a grid
 # Split the window into two vertical panes
-tmux split-window -h
+tmux split-window -h -t 0 -l '50%' 
 
 # Split the right pane into two horizonal panes
-tmux split-window -v
+tmux split-window -v -t 1 -l '80%'
 
-# Select the right pane and split it into two vertical panes
-tmux select-pane -t 0
-tmux split-window -v
+# Split the left pane into two horizontal panes
+tmux split-window -v -t 0 -l '80%'
 
-# Select the top-left pane
-tmux select-pane -t 0
+# Split the bottom right pane into 2 panes horizontally
+tmux split-window -v -t 3
 
-#tmux resize-pane -t 0 -y 20
-#tmux resize-pane -t 1 -y 20
-#tmux resize-pane -t 2 -y 20
-#tmux resize-pane -t 3 -y 20
+# Split the bottom left pane into 2 panes horizontally
+tmux split-window -v -t 1
+
+# Sent a command to each pane
+tmux send-key -t 0 'tput lines' C-m
+tmux send-key -t 1 'tput lines' C-m
+tmux send-key -t 2 'tput lines' C-m
+tmux send-key -t 3 'tput lines' C-m
+tmux send-key -t 4 'tput lines' C-m
+tmux send-key -t 5 'tput lines' C-m
 
 # Attach to the tmux session
 tmux attach-session -t $SESSION_NAME
 
-
-
+# important commands to test etc:
+# tmux kill-window
+# tmux list-panes
+# tmux display -p '#{window_height}'
+# tput lines
+# tmux display-panes
 
 
