@@ -1,17 +1,17 @@
 #!/bin/bash
 #====================================================
-# TITLE:            main_v0.sh
+# TITLE:            main_v1.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-07-30
-# USAGE:            ./main_v0.sh
+# DATE:             2024-08-21
+# USAGE:            ./main_v1.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          1.0.0
+# VERSION:          1.1.0
 #====================================================
 
 # Define the initial array with command options
-options=("who" "last" "ulimit -a" "env" "id")
+options=("who" "last" "ulimit" "env" "id")
 
 # Function to display current options
 show_options() {
@@ -43,6 +43,22 @@ get_selection() {
 selected_options=()
 
 global_var_selection="nth chosen"
+
+
+# Check if tmux is running, if it is kill its panes
+if tmux ls > /dev/null 2>&1; then
+    echo "tmux is running"
+    sleep 1
+    tmux kill-pane -t 5
+    tmux kill-pane -t 4
+    tmux kill-pane -t 3
+    tmux kill-pane -t 2
+    tmux kill-pane -t 1
+else
+    echo "tmux is not running"
+    sleep 1
+fi
+
 
 # Loop to get 4 unique options from the user
 while [ ${#selected_options[@]} -lt 4 ]; do
@@ -86,4 +102,15 @@ echo "You selected:"
 for option in "${selected_options[@]}"; do 
     echo "$option"
 done
+
+# Calling script, which open tmux panes with chosen comands
+ 
+echo ${selected_options[0]}
+echo ${selected_options[1]}
+echo ${selected_options[2]}
+./tmux_v1.sh ${selected_options[0]} ${selected_options[1]} ${selected_options[2]} ${selected_options[3]}    
+
+
+
+
 
