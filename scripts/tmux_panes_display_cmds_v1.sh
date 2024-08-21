@@ -57,3 +57,4 @@ esac
 
 # Execute the selected command
 eval "$exec_cmd"
+
