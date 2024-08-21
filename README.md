@@ -1,8 +1,8 @@
 # linux-sys-monitor-and-log-project
 
 Goal:
-Create a Linux Commandline based System Monitor including mostly information which is valuable for the LFCS through Shell Scripts.
-Extended Features will be: Dashboard elements, Logs, Logs anomalies.
+Create a Linux commandline based system monitor including mostly information which is valuable for the LFCS through shell scripts.
+Extended Features will be: Dashboard elements, logs, log anomalies.
 
 I challenge myself to on this software developing process to display my structured problem solving approach as well as my Linux skills. 
 
@@ -26,6 +26,7 @@ Update Files if relevant changes
 
 3) First Dashboard elements
 Improve Main Script: Display System monitor dashboard with tmux
+Improve Main Script: Combine User input selection with tmux dashboard
 Update Files if relevant changes
 
 4) Text parsing integration
@@ -34,7 +35,7 @@ Update Files if relevant changes
 
 5) Continuous update and improvement
 Ensure displayed items are updated continuously according to user input. 
-Improve metric scripts (1-5) for better functionality
+Script which do changes so that these changes are visible on the dashboard when it updates
 Update Files if relevant changes
 
 6) Additional Scripts Development
