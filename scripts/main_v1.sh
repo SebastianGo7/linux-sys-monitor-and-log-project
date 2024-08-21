@@ -7,7 +7,7 @@
 # USAGE:            ./main_v1.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          1.1.0
+# VERSION:          1.2.0
 #====================================================
 
 # Define the initial array with command options
@@ -15,6 +15,12 @@ options=("who" "last" "ulimit" "env" "id")
 
 # Function to display current options
 show_options() {
+    if [ ${#selected_options[@]} -gt 0 ];
+        then
+        # Display chosen options so far
+        echo "Chosen options so far: ${selected_options[*]}"
+    fi
+
     echo "Available options:"
     local index=1
     for opt in "${options[@]}"; do
@@ -93,6 +99,7 @@ while [ ${#selected_options[@]} -lt 4 ]; do
             fi
         done
         options=("${new_options[@]}")
+
     fi
 done
 
