@@ -7,7 +7,7 @@
 # USAGE:            ./main_v1.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          1.2.0
+# VERSION:          1.3.0
 #====================================================
 
 # Define the initial array with command options
@@ -15,18 +15,23 @@ options=("who" "last" "ulimit" "env" "id")
 
 # Function to display current options
 show_options() {
-    if [ ${#selected_options[@]} -gt 0 ];
-        then
-        # Display chosen options so far
-        echo "Chosen options so far: ${selected_options[*]}"
-    fi
 
+    echo "This is a program to display specific important output of chosen commands."
+    echo "Please choose 4 commands by entering its number one after the other."
+    echo " " 
     echo "Available options:"
     local index=1
     for opt in "${options[@]}"; do
         echo "$index) $opt"
         ((index++))
     done
+
+    echo ""
+    if [ ${#selected_options[@]} -gt 0 ];
+        then
+        # Display chosen options so far
+        echo -e "Chosen options so far: ${selected_options[*]}\n"
+    fi
 }
 
 # Function to promt the user to select an option
@@ -50,7 +55,6 @@ selected_options=()
 
 global_var_selection="nth chosen"
 
-
 # Check if tmux is running, if it is kill its panes
 if tmux ls > /dev/null 2>&1; then
     echo "tmux is running"
@@ -65,12 +69,10 @@ else
     sleep 1
 fi
 
-
 # Loop to get 4 unique options from the user
 while [ ${#selected_options[@]} -lt 4 ]; do
     clear
     show_options
-
 
     # Check if options are available to select
     # If no options are available, inform the user and exit the loop
@@ -111,13 +113,5 @@ for option in "${selected_options[@]}"; do
 done
 
 # Calling script, which open tmux panes with chosen comands
- 
-echo ${selected_options[0]}
-echo ${selected_options[1]}
-echo ${selected_options[2]}
 ./tmux_v1.sh ${selected_options[0]} ${selected_options[1]} ${selected_options[2]} ${selected_options[3]}    
-
-
-
-
 
