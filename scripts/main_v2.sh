@@ -3,15 +3,21 @@
 # TITLE:            main_v2.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-23
+# DATE:             2024-08-25
 # USAGE:            ./main_v2.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          2.2.0
+# VERSION:          2.3.0
 #====================================================
 
+# Name of the file where seslected commands will be saved
+FILE_NAME="user_arguments_v0.txt"
+
+# Clear the file content before writing new data
+> $FILE_NAME
+
 # Define the initial array with command options
-options=("who" "last" "ulimit" "env" "id" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log")
+options=("who" "last" "ulimit" "env" "id" "chage" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log")
 
 # Function to display current options
 show_options() {
@@ -114,8 +120,10 @@ done
 echo "You selected:"
 for option in "${selected_options[@]}"; do 
     echo "$option"
+
+    echo "$option" >> $FILE_NAME
 done
 
 # Calling script, which open tmux panes with chosen comands
-./tmux_v1.sh ${selected_options[0]} ${selected_options[1]} ${selected_options[2]} ${selected_options[3]}    
+./tmux_v2.sh ${selected_options[0]} ${selected_options[1]} ${selected_options[2]} ${selected_options[3]}    
 
