@@ -3,11 +3,11 @@
 # TITLE:            main_v2.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-21
+# DATE:             2024-08-22
 # USAGE:            ./main_v2.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          2.0.0
+# VERSION:          2.1.0
 #====================================================
 
 # Define the initial array with command options
@@ -25,7 +25,8 @@ show_options() {
         echo "$index) $opt"
         ((index++))
     done
-
+    echo ""
+    echo "q) Exit the program."
     echo ""
     if [ ${#selected_options[@]} -gt 0 ];
         then
@@ -40,7 +41,10 @@ get_selection() {
     local choice
     while :; do
         read -rp "$prompt" choice
-        if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice >= 1 && choice <= ${#options[@]}));
+        if [[ "$choice" == "q" ]]; then
+            echo "Exiting the script."
+            exit 0
+        elif [[ "$choice" =~ ^[0-9]+$ ]] && ((choice >= 1 && choice <= ${#options[@]}));
         then
             global_var_selection=($choice)
             return 
