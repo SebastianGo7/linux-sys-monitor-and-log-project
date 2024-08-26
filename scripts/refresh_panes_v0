@@ -1,0 +1,24 @@
+#!/bin/bash
+#====================================================
+# TITLE:            refresh_panes_v0.sh
+# DESCRIPTION:      Linux System Monitor
+# AUTHOR:           Sebastian Gommel
+# DATE:             2024-08-26
+# USAGE:            ./main_v3.sh
+# DEPENDENCIES:     No dependencies
+# LICENSE:          MIT License
+# VERSION:          0.1.0
+#====================================================
+
+# Refresh panes with the given arguments
+
+while true; do
+    
+    tmux send-key -t 1 "./tmux_panes_display_cmds_v2.sh $1" C-m
+    tmux send-key -t 1 "date" C-m
+    tmux send-key -t 4 "./tmux_panes_display_cmds_v2.sh $2" C-m
+
+    tmux send-key -t 2 "./tmux_panes_display_cmds_v2.sh $3" C-m
+    tmux send-key -t 5 "./tmux_panes_display_cmds_v2.sh $4" C-m
+    sleep 5
+done
