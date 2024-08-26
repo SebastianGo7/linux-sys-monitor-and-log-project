@@ -21,21 +21,22 @@ Choose System Metrics and create Docs SystemMetrics_v0 and v1
 Create README File
 
 2) Initial Development 
-Start Developing Main Script: Implementing user input selection menu
+Start Developing Main Script (v1): Implementing user input selection menu
 Update Files if relevant changes
 
 3) First Dashboard elements
 Improve Main Script: Display System monitor dashboard with tmux
-Improve Main Script: Combine User input selection with tmux dashboard
+Improve Main Script (v2): Combine User input selection with tmux dashboard
 Update Files if relevant changes
 
 4) Text parsing integration
 Create text parsing scripts for specific user files using tools as sed, cut, awk
+And make them available in main script (v3)
 Update Files if relevant changes
 
 5) Continuous update and improvement
-Ensure displayed items are updated continuously according to user input. 
-Script which do changes so that these changes are visible on the dashboard when it updates
+Ensure displayed items are updated continuously main script (v3) with refresh_pane script. 
+Script change_system_values, which do changes so that these changes are visible on the dashboard when it updates
 Update Files if relevant changes
 
 6) Additional Scripts Development
@@ -51,7 +52,7 @@ Implement logging and monitoring changes with options configurable by user input
 Update Files if relevant changes
 
 9) Anomaly Detection of Logs
-Develop scripts for anomaly detection according to user input
+Develop scripts for anomaly detection according to user input for specific commands
 Create a script to display detected anomalies 
 Update Files if relevant changes
 
