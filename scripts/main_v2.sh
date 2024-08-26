@@ -3,15 +3,15 @@
 # TITLE:            main_v2.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-22
+# DATE:             2024-08-23
 # USAGE:            ./main_v2.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          2.1.0
+# VERSION:          2.2.0
 #====================================================
 
 # Define the initial array with command options
-options=("who" "last" "ulimit" "env" "id")
+options=("who" "last" "ulimit" "env" "id" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log")
 
 # Function to display current options
 show_options() {
