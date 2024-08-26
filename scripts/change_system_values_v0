@@ -1,0 +1,91 @@
+#!/bin/bash
+#====================================================
+# TITLE:            change_system_values_v0.sh
+# DESCRIPTION:      Linux System Monitor
+# AUTHOR:           Sebastian Gommel
+# DATE:             2024-08-26
+# USAGE:            ./main_v3.sh
+# DEPENDENCIES:     No dependencies
+# LICENSE:          MIT License
+# VERSION:          0.1.0
+#====================================================
+
+# Define the initial array with command options
+options=(
+    "Influence chage: Standard values" 
+    "Influence chage: Password expires in 100 days" 
+    "Influence chage: Account expires in 150 days" 
+    "Influence chage: Account expires in 200 days"
+)
+
+# Function to display current options
+show_options() {
+
+    echo "This is a program to change system parameters."
+    echo "Please choose one option."
+    echo " " 
+    for i in "${!options[@]}"; do
+        echo "$((i + 1))) ${options[$i]}"
+    done
+    echo ""
+    echo "q) Exit the program."
+    echo ""
+}
+
+# Function to execute script
+execute_script() {
+    # use a case statement for different commands
+
+    # Converting to zero-based index
+    local option_index=$(($1 -1))
+    echo "You selected: ${options[$option_index]}"
+
+    case "$1" in
+        1)  
+            sudo chage -M -1 user_999
+            sudo chage -E -1 user_999
+            sudo chage -d 2024-07-03 user_999
+            ;;
+        2)
+            sudo chage -M 100 user_999 
+            ;;
+        3)
+            sudo chage -E $(date -d "+150 days" +"%Y-%m-%d") user_999       
+            ;;
+        4) 
+            # Calculate the expiration date 200 days from now
+            expiration_date=$(date -d "+200 days" +"%Y-%m-%d")
+
+            sudo chage -E "$expiration_date" user_999 
+            ;;
+        *)
+            # Handle invalid command
+            echo "Invalid option."
+            exit 1
+            ;;
+    esac
+
+}
+
+# Function to promt the user to select an option
+get_selection() {
+    local choice
+
+    read -rp "Select an option: " choice
+    if [[ "$choice" == "q" ]]; then
+        echo "Exiting the script."
+        exit 0
+    elif [[ "$choice" =~ ^[1-4]+$ ]] ;
+    then
+        execute_script "$choice"
+    else
+        echo "Invalid input. Please enter a number between 1 and ${#options[@]}."
+    fi
+}
+
+
+# Main script execution
+show_options
+get_selection
+
+
