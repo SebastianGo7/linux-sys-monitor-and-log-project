@@ -7,7 +7,7 @@
 # USAGE:            ./main_v3.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          1.1.0
+# VERSION:          1.2.0
 #====================================================
 
 
@@ -77,16 +77,8 @@ display_table() {
 
 sleep 1
 
-refresh_panes() {
-
-tmux send-key -t 1 "date" C-m
-tmux send-key -t 4 "date" C-m
-
-
-tmux send-key -t 2 "date" C-m
-tmux send-key -t 5 "date" C-m
-}
-
-tmux run-shell -b "while true; do $(declare -f refresh_panes); refresh_panes; sleep 10; done"
 
 tmux attach-session -t $SESSION_NAME
+
+
+# tmux panes are filled and refreshed through refresh_panes script
