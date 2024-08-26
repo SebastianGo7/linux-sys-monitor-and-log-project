@@ -7,9 +7,8 @@
 # USAGE:            ./main_v3.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.2.0
+# VERSION:          0.3.0
 #====================================================
-
 
 #argument_value_1="$1"
 
@@ -29,55 +28,42 @@ cmd4=$(sed -n '4p' $FILE_NAME)
 echo "Commands: $cmd1 $cmd2 $cmd3 $cmd4"
 
 
+# Sent a command to each pane
 
-# Define display table function
+tmux send-key -t 3 "$(cat << EOF
+
+#Define display table function
 display_table() {
 
-    local cmd1="$1"
-    local cmd2="$2"
-    local cmd3="$3"
-    local cmd4="$4"
+    local cmd1=$1
+    local cmd2=$2
+    local cmd3=$3
+    local cmd4=$4
 
     # Define column widths
-    width1=18
-    width2=18
+    local width1=15
+    local width2=15
+
+    # Temporary display of the table
+    echo -e "$cmd1\t$cmd2"
+    echo -e "$cmd3\t$cmd4" | column -t
 
     # Format and display the table
-    table_content=$(printf "%-${width1}s | %-${width2}s\n" "$cmd1" "$cmd2"
-                  printf "+%s+%s+\n" "$(printf '%*s' "$width1" | tr ' ' '-')" "$(printf '%*s' "$width2" | tr ' ' '-')"
-                  printf "%-${width1}s | %-${width2}s\n" "$cmd3" "$cmd4")
-
-    echo "$table_content"
-
+#    printf "%-${width1}s | %-${width2}s\n" "$cmd1" "$cmd2"
+#    printf "+%s+%s+\n" "$(printf '%*s' "$width1" | tr ' ' '-')" "$(printf '%*s' "$width2" | tr ' ' '-')"
+#    printf "%-${width1}s | %-{$width2}s\n" "$cmd3" "$cmd4"
 }
 
 
-# Temporary leaving table field empty.
 
-# Sent a command to each pane
-tmux send-key -t 0 './tmux_panes_display_cmds_v1.sh menu_info' C-m
-
-
-tmux send-key -t 3 "$(cat << EOF 
-$(declare -f display_table) 
-$(table_content=$(display_table "$cmd1" "$cmd2" "$cmd3" "$cmd4"))
+#$(declare -f display_table) 
+display_table "$cmd1" "$cmd2" "$cmd3" "$cmd4"
 EOF
 )" C-m
 
 
-#tmpfile=$(mktemp)
-#cat << EOF > "$tmpfile"
-#$(declare -f display_table)
-#
-#display_table
-#EOF
-#
-#tmux send-key -t 3 "$(cat "$tmpfile")" C-m
- 
-#tmux send-key -t 3 "echo 'just sth'" C-m
-#rm "$tmpfile"
-
-
+# static pane
+tmux send-key -t 0 './tmux_panes_display_cmds_v1.sh menu_info' C-m
 
 # Refresh panes with the given commands or arguments
 
