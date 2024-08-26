@@ -3,12 +3,13 @@
 # TITLE:            tmux_v1.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-21
-# USAGE:            ./main_v1.sh
+# DATE:             2024-08-25
+# USAGE:            ./main_v3.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          1.0.0
+# VERSION:          1.1.0
 #====================================================
+
 
 echo "Arguments: $@"
 
@@ -28,8 +29,10 @@ argument_value_4="$4"
 # Define session name
 SESSION_NAME="grid_session_3x2"
 
-# Create a new tmux session with a specified name, and start it in detach mode
-tmux new-session -d -s $SESSION_NAME
+    
+# Create a new tmux session with a specified name, and start it in detach mode 
+# Attach if session already exists
+tmux new-session -d -s $SESSION_NAME || tmux attach-session -t $SESSION_NAME
 
 # Split the window into a grid
 # Split the window into two vertical panes
@@ -74,28 +77,16 @@ display_table() {
 
 sleep 1
 
-# Sent a command to each pane
-tmux send-key -t 0 './tmux_panes_display_cmds_v1.sh menu_info' C-m
-tmux send-key -t 3 "$(cat << EOF 
-$(declare -f display_table) 
-display_table $argument_value_1 $argument_value_2 $argument_value_3 $argument_value_4
-EOF
-)" C-m 
+refresh_panes() {
 
-tmux send-key -t 1 "./tmux_panes_display_cmds_v1.sh $argument_value_1" C-m
-tmux send-key -t 4 "./tmux_panes_display_cmds_v1.sh $argument_value_2" C-m
+tmux send-key -t 1 "date" C-m
+tmux send-key -t 4 "date" C-m
 
-tmux send-key -t 2 "./tmux_panes_display_cmds_v1.sh $argument_value_3" C-m
-tmux send-key -t 5 "./tmux_panes_display_cmds_v1.sh $argument_value_4" C-m
+
+tmux send-key -t 2 "date" C-m
+tmux send-key -t 5 "date" C-m
+}
+
+tmux run-shell -b "while true; do $(declare -f refresh_panes); refresh_panes; sleep 10; done"
 
 tmux attach-session -t $SESSION_NAME
-
-
-# important commands to test etc:
-# tmux kill-window
-# tmux list-panes
-# tmux display -p '#{window_height}'
-# tput lines
-# tmux display-panes
-
-
