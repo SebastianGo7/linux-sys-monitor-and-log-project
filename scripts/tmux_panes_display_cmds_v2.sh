@@ -7,7 +7,7 @@
 # USAGE:            ./main_v4.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          2.1.0
+# VERSION:          2.2.0
 #====================================================
 
 # Check if a command argument is provided
@@ -106,6 +106,84 @@ case "$COMMAND" in
         # Execute the top command
         exec_cmd="top -b -n 1 | awk 'NR>6{print \$1, \$2, \$9, \$10, \$12, \$13}'| head -n 5"
         ;;    
+    ps)
+        # Execute the ps command
+        exec_cmd="ps -eo pid,%cpu,%mem,comm --sort=-%cpu | head -n 5"
+        ;;
+    crontab)
+        # Execute the crontab command
+        exec_cmd="crontab -l | grep -v '^#'"
+        ;;
+    journalctl)
+        # Execute the journalctl command
+        exec_cmd="journalctl -xe | grep -i Shell | tail -n 4"
+        ;;
+    timezone)
+        # Display info of timezone file
+        exec_cmd="cat /etc/timezone"
+        ;;
+#--------------New category Network---------------
+    ipaddr_show)
+        # Execute the ip addr show command
+        exec_cmd="ip addr show up | awk '/^[0-9]+:/ {print \$2} /link\\/ether/ {print \"  MAC:\", \$2} /inet / {print \"  IP:\", \$2}'"
+        ;;
+    hostnamectl)
+        # Execute the hostnamectl command
+        exec_cmd="hostnamectl"
+        ;;
+    ss_ltpn)
+        # Execute the ss ltpn command
+        exec_cmd="ss -ltpn | awk 'NR==1 {print \"STATE\", \"RECV-Q\", \"SEND-Q\", \"LOCAL ADDRESS:PORT\", \"REMOTE ADDRESS:PORT\"}; NR>1 {print \$1, \$2, \$3, \$4, \$5}'"
+        ;;
+    date)
+        # Execute the date command
+        exec_cmd="date"
+        ;;
+    firewalld)
+        # Execute the firewalld command
+        exec_cmd="sudo firewall-cmd --list-all | head -n 9"
+        ;;
+    /proc/net/tcp)
+        # Display info of tcp file
+        exec_cmd="cat /proc/net/tcp | awk '{print \$1, \$2, \$3, \$4, \$5}'"
+        ;;
+#--------------New category Storage---------------
+    df)
+        # Execute the df command
+        exec_cmd="df -h"
+        ;;
+    iostat)
+        # Execute the iostat command
+        exec_cmd="iostat | grep -v loop | head -n 12 | awk '{print \$1, \$2, \$3, \$4}'"
+        ;;
+    vmstat)
+        # Execute the vmstat command
+        exec_cmd="vmstat | awk '{print \$1, \$2, \$3, \$4, \$5, \$6}'"
+        ;;
+    lsblk)
+        # Execute the lsblk command
+        exec_cmd="lsblk | grep -v loop"
+        ;;
+    fdisk)
+        # Execute the fdisk command
+        exec_cmd="sudo fdisk -l | grep /dev/sda: -A6"
+        ;;
+    du)
+        # Execute the du command
+        exec_cmd="find . -maxdepth 1 -type f -exec du -h {} +"        
+        ;;
+    /proc/mdstat)
+        # Display info of mdstat file
+        exec_cmd="cat /proc/mdstat"
+        ;;
+    /etc/fstab)
+        # Display info of fstab file
+        exec_cmd="sudo tail -n +9 /etc/fstab | cut -c -44 | fold -w 44"
+        ;;
+    /proc/partitions)
+        # Display info of partitions file
+        exec_cmd="cat /proc/partitions | grep -v loop"
+        ;;
     *)
         # Handle invalid command
         echo "Invalid command, please use a correct command or codeword"
