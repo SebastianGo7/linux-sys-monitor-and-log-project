@@ -1,26 +1,14 @@
 #!/bin/bash
 #====================================================
-# TITLE:            tmux_v1.sh
+# TITLE:            tmux_v2.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-26
-# USAGE:            ./main_v3.sh
+# DATE:             2024-08-31
+# USAGE:            ./main_v4.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          2.0.0
+# VERSION:          2.1.0
 #====================================================
-
-echo "Arguments: $@"
-
-if [ "$#" -ne 4 ]; then
-    echo "Please pass 4 commands to use $0"
-    exit 1
-fi
-
-argument_value_1="$1"
-argument_value_2="$2"
-argument_value_3="$3"
-argument_value_4="$4"
 
 # tmux division into 6 parts, 3x2, upper two should only take about 20%
 # the middle and lower each about 40% of the vertical length.
@@ -49,35 +37,8 @@ tmux split-window -v -t 3
 # Split the bottom left pane into 2 panes horizontally
 tmux split-window -v -t 1
 
-# Define display table function
-display_table() {
-
-    if [ "$#" -ne 4 ] ; then
-        echo "Please pass 4 commands to be displayed"
-        exit 1
-    fi
-
-    argument_value_1="$1"
-    argument_value_2="$2"
-    argument_value_3="$3"
-    argument_value_4="$4"
-
-    # Define column widths
-    width1=18
-    width2=18
-
-    # Format and display the table
-
-    printf "%-${width1}s | %-${width2}s\n" "$argument_value_1" "$argument_value_2"
-    printf "+%s+%s+\n" "$(printf '%*s' "$width1" | tr ' ' '-')" "$(printf '%*s' "$width2" | tr ' ' '-')"
-    printf "%-${width1}s | %-${width2}s\n" "$argument_value_3" "$argument_value_4"
-
-}
-
 sleep 1
 
-
 tmux attach-session -t $SESSION_NAME
-
 
 # tmux panes are filled and refreshed through refresh_panes script
