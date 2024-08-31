@@ -3,11 +3,11 @@
 # TITLE:            refresh_panes_v0.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-26
+# DATE:             2024-08-27
 # USAGE:            ./main_v3.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.3.0
+# VERSION:          0.4.0
 #====================================================
 
 #argument_value_1="$1"
@@ -25,7 +25,10 @@ cmd2=$(sed -n '2p' $FILE_NAME)
 cmd3=$(sed -n '3p' $FILE_NAME)
 cmd4=$(sed -n '4p' $FILE_NAME)
 
-echo "Commands: $cmd1 $cmd2 $cmd3 $cmd4"
+# Variables for display_table
+width1=18
+width2=18
+cmd6="20"
 
 
 # Sent a command to each pane
@@ -34,33 +37,19 @@ tmux send-key -t 3 "$(cat << EOF
 
 #Define display table function
 display_table() {
-
-    local cmd1=$1
-    local cmd2=$2
-    local cmd3=$3
-    local cmd4=$4
-
-    # Define column widths
-    local width1=15
-    local width2=15
-
-    # Temporary display of the table
-    echo -e "$cmd1\t$cmd2"
-    echo -e "$cmd3\t$cmd4" | column -t
-
+    
     # Format and display the table
-#    printf "%-${width1}s | %-${width2}s\n" "$cmd1" "$cmd2"
-#    printf "+%s+%s+\n" "$(printf '%*s' "$width1" | tr ' ' '-')" "$(printf '%*s' "$width2" | tr ' ' '-')"
-#    printf "%-${width1}s | %-{$width2}s\n" "$cmd3" "$cmd4"
+    echo ""
+    printf "%-${width1}s | %-${width2}s\n" "$cmd1" "$cmd2"
+    printf "+%s+%s+\n" "$(printf '%*s' "$width1" | tr ' ' '-')" "$(printf '%*s' "$width2" | tr ' ' '-')"
+    printf "%-${width1}s | %-${width2}s\n" "$cmd3" "$cmd4"
 }
-
 
 
 #$(declare -f display_table) 
 display_table "$cmd1" "$cmd2" "$cmd3" "$cmd4"
 EOF
 )" C-m
-
 
 # static pane
 tmux send-key -t 0 './tmux_panes_display_cmds_v1.sh menu_info' C-m
@@ -79,10 +68,8 @@ while true; do
     tmux send-key -t 2 "./tmux_panes_display_cmds_v2.sh $cmd3" C-m
     tmux send-key -t 2 "date" C-m
 
-
     tmux send-key -t 5 "./tmux_panes_display_cmds_v2.sh $cmd4" C-m
     tmux send-key -t 5 "date" C-m
-
 
     sleep 5
 done
