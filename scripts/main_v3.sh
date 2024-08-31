@@ -3,11 +3,11 @@
 # TITLE:            main_v3.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-26
+# DATE:             2024-08-31
 # USAGE:            ./main_v3.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          3.0.0
+# VERSION:          3.1.0
 #====================================================
 
 # Name of the file where seslected commands will be saved
@@ -17,7 +17,7 @@ FILE_NAME="user_arguments_v0.txt"
 > $FILE_NAME
 
 # Define the initial array with command options
-options=("who" "last" "ulimit" "env" "id" "chage" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log")
+options=("who" "last" "ulimit" "env" "id" "chage" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log" "systemctl" "mpstat" "free" "strace" "dstat_cpu" "dstat_mem" "sysctl" "uptime" "top" "ps" "crontab" "journalctl" "timezone" "ipaddr_show" "hostnamectl" "ss_ltpn" "date" "firewalld" "/proc/net/tcp" "df" "iostat" "vmstat" "lsblk" "fdisk" "du" "/proc/mdstat" "/etc/fstab" "/proc/partitions" )
 
 # Function to display current options
 show_options() {
@@ -125,5 +125,5 @@ for option in "${selected_options[@]}"; do
 done
 
 # Calling script, which open tmux panes with chosen comands
-./tmux_v2.sh ${selected_options[0]} ${selected_options[1]} ${selected_options[2]} ${selected_options[3]}    
+./tmux_v3.sh ${selected_options[0]} ${selected_options[1]} ${selected_options[2]} ${selected_options[3]}    
 
