@@ -64,8 +64,8 @@ EOF
 # static pane
 tmux send-key -t 0 './tmux_panes_display_cmds_v1.sh menu_info' C-m
 
-# Refresh panes with the given commands or arguments
 
+# Refresh panes with the given commands or arguments
 while true; do
     # date is used to check update every 5 seconds
 
