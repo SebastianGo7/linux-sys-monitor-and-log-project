@@ -7,7 +7,7 @@
 # USAGE:            ./main_v3.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          3.1.0
+# VERSION:          3.2.0
 #====================================================
 
 # Name of the file where seslected commands will be saved
@@ -16,8 +16,16 @@ FILE_NAME="user_arguments_v0.txt"
 # Clear the file content before writing new data
 > $FILE_NAME
 
-# Define the initial array with command options
-options=("who" "last" "ulimit" "env" "id" "chage" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log" "systemctl" "mpstat" "free" "strace" "dstat_cpu" "dstat_mem" "sysctl" "uptime" "top" "ps" "crontab" "journalctl" "timezone" "ipaddr_show" "hostnamectl" "ss_ltpn" "date" "firewalld" "/proc/net/tcp" "df" "iostat" "vmstat" "lsblk" "fdisk" "du" "/proc/mdstat" "/etc/fstab" "/proc/partitions" )
+# Define array with options into 5 categories
+
+category1=("who" "last" "ulimit" "env" "id" "chage" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log")
+category2=("systemctl" "mpstat" "free" "strace" "dstat_cpu" "dstat_mem")
+category3=("dstat_mem" "sysctl" "uptime" "top" "ps" "crontab" "journalctl" "timezone")
+category4=("ipaddr_show" "hostnamectl" "ss_ltpn" "date" "firewalld" "/proc/net/tcp")
+category5=("df" "iostat" "vmstat" "lsblk" "fdisk" "du" "/proc/mdstat" "/etc/fstab" "/proc/partitions")
+
+options=("${category1[@]}" "${category2[@]}" "${category3[@]}" "${category4[@]}" "${category5[@]}")
+# options=("who" "last" "ulimit" "env" "id" "chage" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log" "systemctl" "mpstat" "free" "strace" "dstat_cpu" "dstat_mem" "sysctl" "uptime" "top" "ps" "crontab" "journalctl" "timezone" "ipaddr_show" "hostnamectl" "ss_ltpn" "date" "firewalld" "/proc/net/tcp" "df" "iostat" "vmstat" "lsblk" "fdisk" "du" "/proc/mdstat" "/etc/fstab" "/proc/partitions" )
 
 # Function to display current options
 show_options() {
@@ -25,12 +33,42 @@ show_options() {
     echo "This is a program to display specific important output of chosen commands."
     echo "Please choose 4 commands by entering its number one after the other."
     echo " " 
-    echo "Available options:"
+
+
+    echo "Category 1: Users and Groups"
     local index=1
-    for opt in "${options[@]}"; do
+    for opt in "${category1[@]}"; do
         echo "$index) $opt"
         ((index++))
     done
+
+    echo -e "\nCategory 2: Essential Commands"
+    for opt in "${category2[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
+
+    echo -e "\nCategory 3: Essential Commands"
+    for opt in "${category3[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
+
+    echo -e "\nCategory 4: Essential Commands"
+    for opt in "${category4[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
+
+    echo -e "\nCategory 5: Essential Commands"
+    for opt in "${category5[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
     echo ""
     echo "q) Exit the program."
     echo ""
