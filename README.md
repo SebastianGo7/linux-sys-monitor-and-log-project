@@ -40,19 +40,25 @@ Script change_system_values, which do changes so that these changes are visible 
 Update Files if relevant changes
 
 6) Additional Scripts Development
-Develop and integrate 5 additional scripts from other four categories. 
-Update Files if relevant changes
+Develop and integrate commands from other four categories. 
+Develop further options for script change_system_values (v1) 
+Update Files if relevant changes 
+(main v4, tmux v3, tmuxpanes v3, refresh_p v1)
 
 7) Extended Parsing and Display
-Develop and integrate 5 text parsing and displaying scripts from other four categories. 
+Develop and integrate additional text parsing cmds. 
+Develop further options for script change_system_values 
 Update Files if relevant changes
+(done together with milestone 6, therefore same versions)
 
 8) Enhanced Logging and Monitoring 
 Implement logging and monitoring changes with options configurable by user input
+Develop further options for script change_system_values 
 Update Files if relevant changes
 
 9) Anomaly Detection of Logs
 Develop scripts for anomaly detection according to user input for specific commands
+Develop further options for script change_system_values 
 Create a script to display detected anomalies 
 Update Files if relevant changes
 
