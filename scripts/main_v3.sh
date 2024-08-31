@@ -7,7 +7,7 @@
 # USAGE:            ./main_v3.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          3.2.0
+# VERSION:          3.3.0
 #====================================================
 
 # Name of the file where seslected commands will be saved
@@ -17,7 +17,6 @@ FILE_NAME="user_arguments_v0.txt"
 > $FILE_NAME
 
 # Define array with options into 5 categories
-
 category1=("who" "last" "ulimit" "env" "id" "chage" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log")
 category2=("systemctl" "mpstat" "free" "strace" "dstat_cpu" "dstat_mem")
 category3=("dstat_mem" "sysctl" "uptime" "top" "ps" "crontab" "journalctl" "timezone")
@@ -25,7 +24,7 @@ category4=("ipaddr_show" "hostnamectl" "ss_ltpn" "date" "firewalld" "/proc/net/t
 category5=("df" "iostat" "vmstat" "lsblk" "fdisk" "du" "/proc/mdstat" "/etc/fstab" "/proc/partitions")
 
 options=("${category1[@]}" "${category2[@]}" "${category3[@]}" "${category4[@]}" "${category5[@]}")
-# options=("who" "last" "ulimit" "env" "id" "chage" "/etc/sudoers" "/etc/passwd" "/etc/group" "/var/log/auth.log" "systemctl" "mpstat" "free" "strace" "dstat_cpu" "dstat_mem" "sysctl" "uptime" "top" "ps" "crontab" "journalctl" "timezone" "ipaddr_show" "hostnamectl" "ss_ltpn" "date" "firewalld" "/proc/net/tcp" "df" "iostat" "vmstat" "lsblk" "fdisk" "du" "/proc/mdstat" "/etc/fstab" "/proc/partitions" )
+
 
 # Function to display current options
 show_options() {
@@ -33,7 +32,6 @@ show_options() {
     echo "This is a program to display specific important output of chosen commands."
     echo "Please choose 4 commands by entering its number one after the other."
     echo " " 
-
 
     echo "Category 1: Users and Groups"
     local index=1
@@ -48,20 +46,17 @@ show_options() {
         ((index++))
     done
 
-
     echo -e "\nCategory 3: Essential Commands"
     for opt in "${category3[@]}"; do
         echo "$index) $opt"
         ((index++))
     done
 
-
     echo -e "\nCategory 4: Essential Commands"
     for opt in "${category4[@]}"; do
         echo "$index) $opt"
         ((index++))
     done
-
 
     echo -e "\nCategory 5: Essential Commands"
     for opt in "${category5[@]}"; do
@@ -78,6 +73,54 @@ show_options() {
         echo -e "Chosen options so far: ${selected_options[*]}\n"
     fi
 }
+
+
+# Function to handle category-specific removal of options
+retrieve_and_update_options() {
+    # Retrieve the selected option
+    selected_option="${options[$((global_var_selection -1 ))]}"
+
+    # Check if the selected option is already chosen
+    if [[ " ${selected_options[*]} " == *" $selected_option "* ]]; then
+        echo "Option '$selected_option' is already selected. Please choose a different option. "
+    else
+        selected_options+=("$selected_option")
+
+    # Remove the selected option from the available options in all categories
+    update_category_options "category1"
+    update_category_options "category2"
+    update_category_options "category3"
+    update_category_options "category4"
+    update_category_options "category5"
+    
+    # Rebuild the combined options array
+    options=("${category1[@]}" "${category2[@]}" "${category3[@]}" "${category4[@]}" "${category5[@]}")
+    
+    fi
+}
+
+
+# Helper function to update a category array after selection deleting chosen cmds
+update_category_options() {
+    local category_name=$1
+    local update_category=()
+    local opt
+
+    # Get the category array dynamically by name
+    eval "category=(\"\${${category_name}[@]}\")"
+
+    # Remove the selected option from the category
+    for opt in "${category[@]}"; do
+        if [[ "$opt" != "$selected_option" ]]; then
+            update_category+=("$opt")
+        fi
+    done
+
+    # Update the category array with the new list
+    eval "${category_name}=(\"\${update_category[@]}\")"
+}
+
+
 
 # Function to promt the user to select an option
 get_selection() {
@@ -97,6 +140,7 @@ get_selection() {
         fi
     done
 }
+
 
 # Array to store user-selected options
 selected_options=()
@@ -131,26 +175,11 @@ while [ ${#selected_options[@]} -lt 4 ]; do
 
     echo "Select option $((${#selected_options[@]} + 1)): "
     get_selection
-    
-    # Retrieve the selected option
-    selected_option="${options[$((global_var_selection - 1))]}"
 
-    # Check if the selected option is already chosen
-    if [[ " ${selected_options[*]} " == *" $selected_option "* ]]; then
-        echo "Option '$selected_option' is already selected. Please choose a different option."
-    else
-        selected_options+=("$selected_option")
 
-        # remove the selected option from the available options
-        new_options=()
-        for opt in "${options[@]}"; do
-            if [[ "$opt" != "$selected_option" ]]; then
-                new_options+=("$opt")
-            fi
-        done
-        options=("${new_options[@]}")
+    # Handle the selected option and upgrade categories
+    retrieve_and_update_options
 
-    fi
 done
 
 
@@ -161,6 +190,7 @@ for option in "${selected_options[@]}"; do
 
     echo "$option" >> $FILE_NAME
 done
+
 
 # Calling script, which open tmux panes with chosen comands
 ./tmux_v3.sh ${selected_options[0]} ${selected_options[1]} ${selected_options[2]} ${selected_options[3]}    
