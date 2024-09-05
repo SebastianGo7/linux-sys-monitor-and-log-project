@@ -52,14 +52,14 @@ Update Files if relevant changes
 (done together with milestone 6, therefore same versions)
 
 8) Enhanced Logging and Monitoring 
-Implement logging and monitoring changes with options configurable by user input
-Develop further options for script change_system_values 
+Implement logging and monitoring script with options configurable by user input
+Develop further options for script change_system_values (v2)
 Update Files if relevant changes
+(personalized_cronjob_creator_v1, main_v5, cronrocks_v0)
 
 9) Anomaly Detection of Logs
-Develop scripts for anomaly detection according to user input for specific commands
-Develop further options for script change_system_values 
-Create a script to display detected anomalies 
+Develop a scripts for anomaly detection 
+Develop further options for script change_system_values to create anomalies
 Update Files if relevant changes
 
 10) Packaging and further development
