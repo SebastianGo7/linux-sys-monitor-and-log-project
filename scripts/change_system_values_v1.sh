@@ -3,11 +3,11 @@
 # TITLE:            change_system_values_v1.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-09-01
+# DATE:             2024-09-03
 # USAGE:            ./change_system_values_v1.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          1.1.0
+# VERSION:          1.2.0
 #====================================================
 
 # Define the array with command options displayed for
@@ -72,8 +72,33 @@ options9=(
     "Change docker Mac address" 
 )
 
+# firewalld
+options10=(
+    "Standard values" 
+    "Add service http" 
+    "Add tcp rule on port 8080" 
+)
 
-options=("${options1[@]}" "${options2[@]}" "${options3[@]}" "${options4[@]}" "${options5[@]}" "${options6[@]}" "${options7[@]}" "${options8[@]}" "${options9[@]}" )
+# df -h
+options11=(
+    "Standard values" 
+    "Mount tmpfs on /mnt/tmptestfs" 
+)
+
+# vmstat
+options12=(
+    "Standard values" 
+    "Set vm vfs cache pressure to 20"
+)
+
+# fstab
+options13=(
+    "Standard values" 
+    "Add mount entry to fstab" 
+)
+
+
+options=("${options1[@]}" "${options2[@]}" "${options3[@]}" "${options4[@]}" "${options5[@]}" "${options6[@]}" "${options7[@]}" "${options8[@]}" "${options9[@]}" "${options10[@]}" "${options11[@]}" "${options12[@]}" "${options13[@]}" )
 
 # Function to display current options
 show_options() {
@@ -137,6 +162,30 @@ show_options() {
         echo "$index) $opt"
         ((index++))
     done
+
+    echo -e "\nInfluence firewalld:"
+    for opt in "${options10[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
+    echo -e "\nInfluence df -h:"
+    for opt in "${options11[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
+    echo -e "\nInfluence vmstat:"
+    for opt in "${options12[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+    echo -e "\nInfluence /etc/fstab:"
+    for opt in "${options13[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
 
     echo ""
     echo "q) Exit the program."
@@ -294,6 +343,61 @@ execute_script() {
             sudo ip link set dev docker0 address 02:42:a5:8a:1d:99
             ;;
 
+# influence firewalld
+        24) 
+            # Remove the http service from the firewall and disable port 8080
+            sudo firewall-cmd --remove-service=http --permanent 
+            sudo firewall-cmd --remove-port=8080/tcp --permanent
+            sudo firewall-cmd --reload
+            ;;
+
+        25) 
+            # Add the http service back to the firewall
+            sudo firewall-cmd --add-service=http --permanent
+            sudo firewall-cmd --reload
+            ;;
+
+        26) 
+            # Add port 8080 (TCP) to the firewall
+            sudo firewall-cmd --add-port=8080/tcp --permanent 
+            sudo firewall-cmd --reload
+            ;;
+
+# influence df -h
+        27) 
+            # Unmount the /mnt/tmptestfs filesystem
+            sudo umount /mnt/tmptestfs
+            ;;
+
+        28) 
+            # Create the /mnt/tmptestfs directory if it doesn't exist 
+            sudo mkdir /mnt/tmptestfs
+            sudo mount -t tmpfs -o size=512M tmptestfs /mnt/tmptestfs
+            ;;
+
+# influence vmstat
+        29) 
+            # Set cache pressure to default
+            sudo sysctl vm.vfs_cache_pressure=100
+            ;;
+
+        30) 
+            # Reduce cache fresure to retain more inodes/dentries
+            sudo sysctl vm.vfs_cache_pressure=20
+            ;;
+
+# influence /etc/fstab
+        31) 
+            # Remove specific added UUID entry from /etc/fstab
+            sudo sed -i '/UUID=7f9076ce-0050-4b16-a12f-99212a42559d.*\/data/d' /etc/fstab
+            ;;
+
+        32) 
+            # Create directory and an UUID entry for /mnt/data to /etc/fstab 
+            sudo mkdir -p /mnt/data
+            echo 'UUID=7f9076ce-0050-4b16-a12f-99212a42559d /mnt/data ext4 defaults 0 2' | sudo tee -a /etc/fstab
+            ;;
+
         *)
             # Handle invalid command
             echo "Invalid option."
@@ -311,7 +415,7 @@ get_selection() {
     if [[ "$choice" == "q" ]]; then
         echo "Exiting the script."
         exit 0
-    elif [[ "$choice" -ge 1 ]] && [[ "$choice" -le 23 ]];
+    elif [[ "$choice" -ge 1 ]] && [[ "$choice" -le 32 ]];
     then
         execute_script "$choice"
     else
