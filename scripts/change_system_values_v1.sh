@@ -3,14 +3,17 @@
 # TITLE:            change_system_values_v1.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-31
-# USAGE:            ./main_v4.sh
+# DATE:             2024-09-01
+# USAGE:            ./change_system_values_v1.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          1.0.0
+# VERSION:          1.1.0
 #====================================================
 
-# Define the initial array with command options
+# Define the array with command options displayed for
+# the user to choose
+
+# chage
 options1=(
     "Standard values" 
     "Password expires in 100 days" 
@@ -18,6 +21,7 @@ options1=(
     "Account expires in 200 days"
 )
 
+# systemctl
 options2=(
     "Standard values" 
     "Systemctl disable ssh" 
@@ -25,6 +29,7 @@ options2=(
     "Systemctl stop ssh"
 )
 
+# sysctl -a
 options3=(
     "Standard values" 
     "Change hostname to user999-webserver" 
@@ -32,16 +37,43 @@ options3=(
     "Set swappiness value to 10"
 )
 
+#top
 options4=(
     "CPU intensive tasks with stress command for 20 seconds"
 )
 
+# ps
 options5=(
     "CPU intensive writing task for 20 seconds"
 )
 
+# crontab
+options6=(
+    "Standard values" 
+    "Add a cronjob" 
+)
 
-options=("${options1[@]}" "${options2[@]}" "${options3[@]}" "${options4[@]}" "${options5[@]}")
+# journalctl -xe
+options7=(
+    "Add custom log entry"
+    "Systemctl restart ssh" 
+)
+
+# cat /etc/timezone
+options8=(
+    "Standard values" 
+    "Set timezone Europe/London" 
+)
+
+# ip addr show
+options9=(
+    "Standard values" 
+    "Change docker ip address" 
+    "Change docker Mac address" 
+)
+
+
+options=("${options1[@]}" "${options2[@]}" "${options3[@]}" "${options4[@]}" "${options5[@]}" "${options6[@]}" "${options7[@]}" "${options8[@]}" "${options9[@]}" )
 
 # Function to display current options
 show_options() {
@@ -83,6 +115,29 @@ show_options() {
         ((index++))
     done
 
+    echo -e "\nInfluence crontab:"
+    for opt in "${options6[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
+    echo -e "\nInfluence journalctl:"
+    for opt in "${options7[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
+    echo -e "\nInfluence /etc/timezone:"
+    for opt in "${options8[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+    echo -e "\nInfluence ip addr show:"
+    for opt in "${options9[@]}"; do
+        echo "$index) $opt"
+        ((index++))
+    done
+
     echo ""
     echo "q) Exit the program."
     echo ""
@@ -97,6 +152,7 @@ execute_script() {
     echo "You selected: ${options[$option_index]}"
 
     case "$1" in
+# influence chage    
         1)  
             # Disable password exiration 
             sudo chage -M -1 user_999
@@ -172,6 +228,72 @@ execute_script() {
             timeout 20s yes >/dev/null &
             ;;
 
+
+# influence crontab
+        15) 
+            # Removing the added cronjob
+            
+            # Defining Cronjob details
+            COMMENT=" Cron job that runs on the 1st of every month at 1:30 AM"
+            CRON_JOB_Part="echo \"Running on the 1st of every month at 1.30 am\""
+
+            # Remove cronjob
+            crontab -l | grep -v -e "$CRON_JOB_Part" -e "$COMMENT" | crontab -
+            ;;
+
+        16) 
+            # Adding a cronjob
+            
+            # Defining Cronjob details
+            COMMENT="# Cron job that runs on the 1st of every month at 1:30 AM"
+            CRON_JOB="30 1 1 * * /bin/bash -c 'echo \"Running on the 1st of every month at 1.30 am\" >> /tmp/cron_monthly.log'"
+
+            # Adding cronjob
+            (
+            crontab -l 2>/dev/null;
+            echo "$COMMENT";
+            echo "$CRON_JOB") | crontab -
+            ;;
+
+# influence journalctl -xe
+        17) 
+            # Add custom log entry
+            sudo logger "Custom log shell entry by user_999"
+            ;;
+
+        18) 
+            # Systemctl restart ssh to create log entry
+            sudo systemctl restart sshd
+            ;;
+
+# influence /etc/timezone
+        19) 
+            # Set timezone to Europe/Berlin
+            sudo timedatectl set-timezone Europe/Berlin
+            ;;
+
+        20) 
+            # Set timezone to Europe/London
+            sudo timedatectl set-timezone Europe/London
+            ;;
+
+# influence ip addr show
+        21) 
+            # Set standart ip address and mac address for docker0 network
+            sudo ip addr del 172.17.0.22/16 dev docker0
+            sudo ip link set dev docker0 address 02:42:a5:8a:1d:3b
+            ;;
+
+        22) 
+            # Change ip address of docker0 network
+            sudo ip addr add 172.17.0.22/16 dev docker0
+            ;;
+
+        23) 
+            # Change Mac address docker0
+            sudo ip link set dev docker0 address 02:42:a5:8a:1d:99
+            ;;
+
         *)
             # Handle invalid command
             echo "Invalid option."
@@ -189,7 +311,7 @@ get_selection() {
     if [[ "$choice" == "q" ]]; then
         echo "Exiting the script."
         exit 0
-    elif [[ "$choice" -ge 1 ]] && [[ "$choice" -le 20 ]];
+    elif [[ "$choice" -ge 1 ]] && [[ "$choice" -le 23 ]];
     then
         execute_script "$choice"
     else
