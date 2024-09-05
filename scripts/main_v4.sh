@@ -3,11 +3,11 @@
 # TITLE:            main_v4.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-31
+# DATE:             2024-09-03
 # USAGE:            ./main_v4.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          4.0.0
+# VERSION:          4.1.0
 #====================================================
 
 # Name of the file where seslected commands will be saved
@@ -29,40 +29,82 @@ options=("${category1[@]}" "${category2[@]}" "${category3[@]}" "${category4[@]}"
 # Function to display current options
 show_options() {
 
+    local terminal_width
+    terminal_width=$(tput cols)
+    local threshold_width=80
+
+
     echo "This is a program to display specific important output of chosen commands."
     echo "Please choose 4 commands by entering its number one after the other."
     echo " " 
 
+    print_category() {
+        local category=("${!1}")
+        if [ $terminal_width -ge $threshold_width ]; then
+            half=$(((${#category[@]} + 1) / 2))
+            column1=("${category[@]:0:$half}")
+            column2=("${category[@]:$half}")
+        else
+            column1=("${category[@]}")
+        fi
+         
+        for ((i = 0; i < ${#column1[@]}; i++)); do
+            printf "%-3s %-20s" "$((i+1+start_index)))" "${column1[$i]}"
+            if [ $terminal_width -ge $threshold_width ] && [ $i -lt ${#column2[@]} ]; then
+                printf "%-3s %-20s\n" "$((i+half+1+start_index)))" "${column2[$i]}"
+            else
+                echo ""
+            fi
+        done
+        start_index=$((start_index + ${#category[@]}))
+    }
+    start_index=0
+
     echo "Category 1: Users and Groups"
-    local index=1
-    for opt in "${category1[@]}"; do
-        echo "$index) $opt"
-        ((index++))
-    done
+    print_category category1[@]
+
+#    local index=1
+#    for opt in "${category1[@]}"; do
+#        echo "$index) $opt"
+#        ((index++))
+#    done
+
 
     echo -e "\nCategory 2: Essential Commands"
-    for opt in "${category2[@]}"; do
-        echo "$index) $opt"
-        ((index++))
-    done
+    print_category category2[@]
+
+
+#    for opt in "${category2[@]}"; do
+#        echo "$index) $opt"
+#        ((index++))
+#    done
 
     echo -e "\nCategory 3: Essential Commands"
-    for opt in "${category3[@]}"; do
-        echo "$index) $opt"
-        ((index++))
-    done
+    print_category category3[@]
+
+
+#    for opt in "${category3[@]}"; do
+#        echo "$index) $opt"
+#        ((index++))
+#    done
 
     echo -e "\nCategory 4: Essential Commands"
-    for opt in "${category4[@]}"; do
-        echo "$index) $opt"
-        ((index++))
-    done
+    print_category category4[@]
+
+
+#    for opt in "${category4[@]}"; do
+#        echo "$index) $opt"
+#        ((index++))
+#    done
 
     echo -e "\nCategory 5: Essential Commands"
-    for opt in "${category5[@]}"; do
-        echo "$index) $opt"
-        ((index++))
-    done
+    print_category category5[@]
+
+
+#    for opt in "${category5[@]}"; do
+#        echo "$index) $opt"
+#        ((index++))
+#    done
 
     echo ""
     echo "q) Exit the program."
