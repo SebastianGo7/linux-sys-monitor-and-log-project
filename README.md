@@ -58,11 +58,17 @@ Update Files if relevant changes
 (personalized_cronjob_creator_v1, main_v5, cronrocks_v0)
 
 9) Anomaly Detection of Logs
-Develop a scripts for anomaly detection 
-Develop further options for script change_system_values to create anomalies
+Develop a scripts for anomaly detection (logs_anomalies_detector v1)
+Develop further options for script change_system_values (v3) to create anomalies
+Update Files if relevant changes (personalized_cronjob_creator v2)
+Upload Libre Office Calc docs used for planning (SystemMetrics_v3, Logging_And_Anomalies_v1)
+
+10) User interface unifications
+Create option to detect desired anomalies and display them running the main script 
+Documentation of some relevant outputs as well as explaination
 Update Files if relevant changes
 
-10) Packaging and further development
+11) Packaging and further development
 Package the system monitor to share with users 
 Improve the main script to upgrade the dashboard functionality 
 Update Files if relevant changes
