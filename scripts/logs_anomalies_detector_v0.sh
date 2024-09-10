@@ -3,19 +3,27 @@
 # TITLE:            logs_anomalies_detector_v0.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-09-09
+# DATE:             2024-09-10
 # USAGE:            ./logs_anomalies_detector_v0.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          0.2.0
+# VERSION:          0.3.0
 #====================================================
 
-# Define log file location 
+# Define log file locations
 LOG_DIR="/var/log/custom_logs"
 FIREWALL_LOG="$LOG_DIR/firewall_settings.log"
 SSH_STATUS_LOG="$LOG_DIR/systemctl_ssh_status.log"
 NETWORK_LOG="$LOG_DIR/network_interfaces.log"
 TIMEZONE_LOG="$LOG_DIR/timezone.log"
+
+# Define report folder location
+REPORT_DIR="./anomaly_reports"
+
+# Create the anomaly_reports folder if it doesn't exist
+if [ ! -d "$REPORT_DIR" ]; then 
+    mkdir "$REPORT_DIR"
+fi
 
 # Check if the user provided an argument
 if [ -z "$1" ]; then
@@ -79,6 +87,9 @@ IFS=$'\n' log_dates_array=($log_dates)
 # Get the number of entries in the array
 total_dates=${#log_dates_array[@]}
 
+# Initialize report output
+report_output="First, divided middle, and last detected anomalies\n"
+
 # Check if there are no log dates
 if [[ $total_dates -eq 0 ]]; then
     echo "No anomalies found."
@@ -90,36 +101,41 @@ if [[ $total_dates -lt 6 ]]; then
     echo "Less than 6 log dates available. Displaying all:"
     for date in "${log_dates_array[@]}"; do
         echo "$date"
+        report_output+="$date\n"
     done
-    exit 0
+else
+
+    # Extract the first and last values
+    first="${log_dates_array[0]}"
+    last="${log_dates_array[$((total_dates - 1))]}"
+
+    # Calculate intermediate values for 4 values
+    # Divide the range into 5 steps, 4 intermediate + the first
+    step=$(( (total_dates - 2) / 5 ))
+
+
+    # Extract 4 intermediate values spaced evenly
+    mid1="${log_dates_array[$((1 * step))]}"
+    mid2="${log_dates_array[$((2 * step))]}"
+    mid3="${log_dates_array[$((3 * step))]}"
+    mid4="${log_dates_array[$((4 * step))]}"
+
+    # Print the selected values
+    echo "$first"
+    echo "$mid1"
+    echo "$mid2"
+    echo "$mid3"
+    echo "$mid4"
+    echo "$last"
+
+    report_output+="$first\n$mid1\n$mid2\n$mid3\n$mid4\n$last\n"
 fi
 
-# Extract the first and last values
-first="${log_dates_array[0]}"
-last="${log_dates_array[$((total_dates - 1))]}"
+# Save the report to a file in the anomaly_reports folder
+report_file="$REPORT_DIR/${1}_anomaly_report.txt"
+echo -e "$report_output" > "$report_file"
 
-# Calculate intermediate values for 4 values
-# Divide the range into 5 steps, 4 intermediate + the first
-step=$(( (total_dates - 2) / 5 ))
-
-
-# Extract 4 intermediate values spaced evenly
-mid1="${log_dates_array[$((1 * step))]}"
-mid2="${log_dates_array[$((2 * step))]}"
-mid3="${log_dates_array[$((3 * step))]}"
-mid4="${log_dates_array[$((4 * step))]}"
-
-
-# Header message
-echo "First, divided middle, and last detected anomalies"
-
-# Print the selected values
-echo "$first"
-echo "$mid1"
-echo "$mid2"
-echo "$mid3"
-echo "$mid4"
-echo "$last"
+echo "Report saved to: $report_file"
 
 # Reset IFS to default
 unset IFS
