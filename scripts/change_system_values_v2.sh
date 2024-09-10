@@ -3,11 +3,11 @@
 # TITLE:            change_system_values_v2.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-09-03
+# DATE:             2024-09-06
 # USAGE:            ./change_system_values_v2.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          2.0.0
+# VERSION:          2.1.0
 #====================================================
 
 # Define the array with command options displayed for
@@ -26,7 +26,7 @@ options2=(
     "Standard values" 
     "Systemctl disable ssh" 
     "Systemctl restart ssh" 
-    "Systemctl stop ssh"
+    "Anomaly: Systemctl stop ssh"
 )
 
 # sysctl -a
@@ -62,7 +62,9 @@ options7=(
 # cat /etc/timezone
 options8=(
     "Standard values" 
-    "Set timezone Europe/London" 
+    "Set timezone Europe/London"
+    "Anomaly: Set timezone Antarctica/South_Pole"
+    "Anomaly: Special char, timezone = random%data"
 )
 
 # ip addr show
@@ -70,6 +72,8 @@ options9=(
     "Standard values" 
     "Change docker ip address" 
     "Change docker Mac address" 
+    "Anomaly: Add 255.255.255.255/16 as docker ip address"
+    "Anomaly: Special char, network interface = docker0@"
 )
 
 # firewalld
@@ -77,6 +81,7 @@ options10=(
     "Standard values" 
     "Add service http" 
     "Add tcp rule on port 8080" 
+    "Anomaly: Add service ftp"
 )
 
 # df -h
@@ -240,7 +245,7 @@ execute_script() {
             sudo systemctl restart ssh
             ;;
         8)  
-            # Stop the SSH service
+            # Anomaly: Stop the SSH service
             sudo systemctl stop ssh
             ;;
 # influence sysctl -a
@@ -326,73 +331,104 @@ execute_script() {
             sudo timedatectl set-timezone Europe/London
             ;;
 
-# influence ip addr show
         21) 
-            # Set standart ip address and mac address for docker0 network
-            sudo ip addr del 172.17.0.22/16 dev docker0
-            sudo ip link set dev docker0 address 02:42:a5:8a:1d:3b
+            # Anomaly: Set timezone to Antarctica/South_Pole
+            sudo timedatectl set-timezone Antarctica/South_Pole
             ;;
 
         22) 
+            # Anomaly: Set timezone to random%data
+            echo "random%data" | sudo tee /etc/timezone
+            ;;
+
+# influence ip addr show
+        23) 
+            # Set standart ip address and mac address for docker0 network
+            sudo ip link set docker0@ name docker0
+            sudo ip addr del 172.17.0.22/16 dev docker0
+            sudo ip addr del 255.255.255.255/16 dev docker0
+            sudo ip link set dev docker0 address 02:42:a5:8a:1d:3b
+            ;;
+
+        24) 
             # Change ip address of docker0 network
+            sudo ip link set docker0@ name docker0
             sudo ip addr add 172.17.0.22/16 dev docker0
             ;;
 
-        23) 
+        25) 
             # Change Mac address docker0
+            sudo ip link set docker0@ name docker0
             sudo ip link set dev docker0 address 02:42:a5:8a:1d:99
             ;;
+        26)
+            # Change ip address of docker0 creating an anomaly
+            sudo ip link set docker0@ name docker0
+            sudo ip addr add 255.255.255.255/16 dev docker0
+            ;;
+        27)
+            # Change network interface name of docker including @ creating an anomaly
+            sudo ip link set docker0 name docker0@
+            ;;
+
 
 # influence firewalld
-        24) 
+        28) 
             # Remove the http service from the firewall and disable port 8080
             sudo firewall-cmd --remove-service=http --permanent 
             sudo firewall-cmd --remove-port=8080/tcp --permanent
+            sudo firewall-cmd --remove-service=ftp --permanent 
             sudo firewall-cmd --reload
             ;;
 
-        25) 
+        29) 
             # Add the http service back to the firewall
             sudo firewall-cmd --add-service=http --permanent
             sudo firewall-cmd --reload
             ;;
 
-        26) 
+        30) 
             # Add port 8080 (TCP) to the firewall
             sudo firewall-cmd --add-port=8080/tcp --permanent 
             sudo firewall-cmd --reload
             ;;
 
+        31)
+            # Add ftp service to the firewall creating an anomaly
+            sudo firewall-cmd --add-service=ftp --permanent
+            sudo firewall-cmd --reload
+            ;;
+
 # influence df -h
-        27) 
+        32) 
             # Unmount the /mnt/tmptestfs filesystem
             sudo umount /mnt/tmptestfs
             ;;
 
-        28) 
+        33) 
             # Create the /mnt/tmptestfs directory if it doesn't exist 
             sudo mkdir /mnt/tmptestfs
             sudo mount -t tmpfs -o size=512M tmptestfs /mnt/tmptestfs
             ;;
 
 # influence vmstat
-        29) 
+        34) 
             # Set cache pressure to default
             sudo sysctl vm.vfs_cache_pressure=100
             ;;
 
-        30) 
+        35) 
             # Reduce cache fresure to retain more inodes/dentries
             sudo sysctl vm.vfs_cache_pressure=20
             ;;
 
 # influence /etc/fstab
-        31) 
+        36) 
             # Remove specific added UUID entry from /etc/fstab
             sudo sed -i '/UUID=7f9076ce-0050-4b16-a12f-99212a42559d.*\/data/d' /etc/fstab
             ;;
 
-        32) 
+        37) 
             # Create directory and an UUID entry for /mnt/data to /etc/fstab 
             sudo mkdir -p /mnt/data
             echo 'UUID=7f9076ce-0050-4b16-a12f-99212a42559d /mnt/data ext4 defaults 0 2' | sudo tee -a /etc/fstab
@@ -415,7 +451,7 @@ get_selection() {
     if [[ "$choice" == "q" ]]; then
         echo "Exiting the script."
         exit 0
-    elif [[ "$choice" -ge 1 ]] && [[ "$choice" -le 32 ]];
+    elif [[ "$choice" -ge 1 ]] && [[ "$choice" -le 37 ]];
     then
         execute_script "$choice"
     else
