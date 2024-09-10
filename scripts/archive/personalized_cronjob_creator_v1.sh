@@ -3,12 +3,22 @@
 # TITLE:            personalized_cronjob_creator_v1.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-09-05
+# DATE:             2024-09-10
 # USAGE:            ./personalized_cronjob_creator_v1.sh
 # DEPENDENCIES:     Visudo changes necessary
 # LICENSE:          MIT License
-# VERSION:          1.0.0
+# VERSION:          1.1.0
 #====================================================
+# The following lines are necessary in the visudo file 
+# for this version to work (please adapt your username):
+# user_999 ALL=(ALL) NOPASSWD: /bin/bash -c \
+# 'source /home/user_999/Documents/SysMonitor/main_v4_development/cronrocks.sh; \
+# log_command "/var/log/custom_logs/timezone.log" "cat /etc/timezone" "Timezone" 1' 
+#
+# user_999 ALL=(ALL) NOPASSWD: /usr/bin/firewall-cmd, /bin/cat, /bin/awkwq
+#
+# user_999 ALL=(ALL) NOPASSWD: /usr/sbin/sysctl, /usr/bin/tail, /usr/bin/grep
+
 
 # Define the base directory for the log files
 LOG_DIR="/var/log/custom_logs"
@@ -25,7 +35,7 @@ LOG_CONTROL=("${@:1:8}")
 FREQ=("${@:9:8}")
 
 # Patch to the script to be sourced
-SCRIPT_PATH="/home/user_999/Documents/SysMonitor/main_v4_development/cronrocks.sh"
+SCRIPT_PATH="/home/user_999/Documents/SysMonitor/main_v5_development/cronrocks_v0.sh"
 
 # Function to log command output
 log_command() {
@@ -115,8 +125,4 @@ for i in "${!commands[@]}"; do
         create_cron_job "${FREQ[$i]}" "$command"
     fi
 done
-
-
-
-
 
