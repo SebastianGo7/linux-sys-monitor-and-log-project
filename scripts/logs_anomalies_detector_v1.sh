@@ -3,11 +3,11 @@
 # TITLE:            logs_anomalies_detector_v1.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-09-10
+# DATE:             2024-09-13
 # USAGE:            ./logs_anomalies_detector_v1.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          1.0.0
+# VERSION:          1.1.0
 #====================================================
 
 # Define log file locations
@@ -16,9 +16,13 @@ FIREWALL_LOG="$LOG_DIR/firewall_settings.log"
 SSH_STATUS_LOG="$LOG_DIR/systemctl_ssh_status.log"
 NETWORK_LOG="$LOG_DIR/network_interfaces.log"
 TIMEZONE_LOG="$LOG_DIR/timezone.log"
+CRONTAB_ENTRIES_LOG="$LOG_DIR/crontab_entries.log"
+FSTAB_CONFIGURATION_LOG="$LOG_DIR/fstab_configuration.log"
+SYSCTL_SETTING_LOG="LOG_DIR/sysctl_settings.log"
+
 
 # Define report folder location
-REPORT_DIR="./anomaly_reports"
+REPORT_DIR="./reports"
 
 # Create the anomaly_reports folder if it doesn't exist
 if [ ! -d "$REPORT_DIR" ]; then 
@@ -28,12 +32,48 @@ fi
 # Check if the user provided an argument
 if [ -z "$1" ]; then
     echo "Usage: $0 <search_term>"
-    echo "Valid search terms: ftp, ssh, ip, timezone, special_char_ip, special_char_timezone"
+    echo "Valid search terms: logs_ssh, logs_ip, logs_timezone, logs_crontab, logs_firewall, log_sysctl, log_fstab, ftp, ssh, ip, timezone, special_char_ip, special_char_timezone"
     exit 1
 fi
 
 # Set the search term and select the log file based on the argument
 case "$1" in 
+    logs_firewall)
+        SEARCH_TERM="CEST"
+        LOG_FILE="$FIREWALL_LOG"
+        LINES_BEFORE=2
+        ;;
+    logs_ssh)
+        SEARCH_TERM="CEST"
+        LOG_FILE="$SSH_STATUS_LOG"
+        LINES_BEFORE=2
+        ;;
+    logs_ip)
+        SEARCH_TERM="CEST"
+        LOG_FILE="$NETWORK_LOG"
+        LINES_BEFORE=2
+        ;;
+    logs_timezone)
+        SEARCH_TERM="CEST"
+        LOG_FILE="$TIMEZONE_LOG"
+        LINES_BEFORE=2
+        ;;
+    logs_crontab)
+        SEARCH_TERM="CEST"
+        LOG_FILE="$CRONTAB_ENTRIES_LOG"
+        LINES_BEFORE=2
+        ;;
+    logs_sysctl)
+        SEARCH_TERM="CEST"
+        LOG_FILE="$SYSCTL_SETTING_LOG"
+        LINES_BEFORE=2
+        ;;
+    logs_fstab)
+        SEARCH_TERM="CEST"
+        LOG_FILE="$FSTAB_CONFIGURATION_LOG"
+        LINES_BEFORE=2
+        ;;
+
     ftp)
         SEARCH_TERM="ftp"
         LOG_FILE="$FIREWALL_LOG"
@@ -66,7 +106,7 @@ case "$1" in
         LINES_BEFORE=9
         ;;
     *)
-        echo "Invalid search term. Valid options are: ftp, ssh, ip, timezone, special_char_ip, special_char_timezone"
+        echo "Invalid search terms. Valid options are: logs_ssh, logs_ip, logs_timezone, logs_crontab, logs_firewall, log_sysctl, log_fstab, ftp, ssh, ip, timezone, special_char_ip, special_char_timezone"
         exit 1
         ;;
 esac
@@ -131,9 +171,16 @@ else
     report_output+="$first\n$mid1\n$mid2\n$mid3\n$mid4\n$last\n"
 fi
 
-# Save the report to a file in the anomaly_reports folder
-report_file="$REPORT_DIR/${1}_anomaly_report.txt"
+echo $1
+# Determine the report file name based on the search term 
+if [[ "$1" == *"logs"* ]]; then
+    report_file="$REPORT_DIR/${1}_report.txt"
+else
+    report_file="$REPORT_DIR/${1}_anomaly_report.txt"
+fi
+
 echo -e "$report_output" > "$report_file"
+
 
 echo "Report saved to: $report_file"
 
