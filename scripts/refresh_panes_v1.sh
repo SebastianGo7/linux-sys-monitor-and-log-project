@@ -1,18 +1,19 @@
 #!/bin/bash
 #====================================================
-# TITLE:            refresh_panes_v0.sh
+# TITLE:            refresh_panes_v1.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-30
-# USAGE:            ./main_v4.sh
+# DATE:             2024-09-14
+# USAGE:            ./main_v6.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          1.0.0
+# VERSION:          1.1.0
 #====================================================
 
 #argument_value_1="$1"
 
 FILE_NAME="user_arguments_v0.txt"
+TMUX_PANES_DISPLAY_CMDS_SCRIPT="./tmux_panes_display_cmds_v4.sh"
 
 if [ ! -f "$FILE_NAME" ]; then
     echo "Error: $FILE_NAME not found!"
@@ -66,23 +67,23 @@ EOF
 )" C-m
 
 # static pane
-tmux send-key -t 0 './tmux_panes_display_cmds_v1.sh menu_info' C-m
+tmux send-key -t 0 "$TMUX_PANES_DISPLAY_CMDS_SCRIPT menu_info" C-m
 
 # Refresh panes with the given commands or arguments
 
 while true; do
     # date is used to check update every 5 seconds
 
-    tmux send-key -t 1 "./tmux_panes_display_cmds_v3.sh $cmd1" C-m
+    tmux send-key -t 1 "$TMUX_PANES_DISPLAY_CMDS_SCRIPT $cmd1" C-m
     tmux send-key -t 1 "date" C-m
  
-    tmux send-key -t 4 "./tmux_panes_display_cmds_v3.sh $cmd2" C-m
+    tmux send-key -t 4 "$TMUX_PANES_DISPLAY_CMDS_SCRIPT $cmd2" C-m
     tmux send-key -t 4 "date" C-m
 
-    tmux send-key -t 2 "./tmux_panes_display_cmds_v3.sh $cmd3" C-m
+    tmux send-key -t 2 "$TMUX_PANES_DISPLAY_CMDS_SCRIPT $cmd3" C-m
     tmux send-key -t 2 "date" C-m
 
-    tmux send-key -t 5 "./tmux_panes_display_cmds_v3.sh $cmd4" C-m
+    tmux send-key -t 5 "$TMUX_PANES_DISPLAY_CMDS_SCRIPT $cmd4" C-m
     tmux send-key -t 5 "date" C-m
 
     sleep $update_interval
