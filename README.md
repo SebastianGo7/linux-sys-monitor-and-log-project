@@ -63,12 +63,20 @@ Develop further options for script change_system_values (v3) to create anomalies
 Update Files if relevant changes (personalized_cronjob_creator v2)
 Upload Libre Office Calc docs used for planning (SystemMetrics_v3, Logging_And_Anomalies_v1)
 
-10) User interface unifications
-Create option to detect desired anomalies and display them running the main script 
-Documentation of some relevant outputs as well as explaination
+10) User interface unification
+Create option to detect desired anomalies and display them running the main script (main_v6.sh) 
+Update Files if relevant changes (tmux_panes_display_cmds_v4.sh) (logs_anomalies_detector_v2.sh) (refresh_panes_v1.sh)
+
+11) Cronjob creator integration and packaging
+Personalized cronjob creator script is integrated to main script
+Package the system monitor to share with users 
 Update Files if relevant changes
 
-11) Packaging and further development
-Package the system monitor to share with users 
-Improve the main script to upgrade the dashboard functionality 
+12) Further development
+Adding Tips and tricks
+Create User Manual
+Update Files if relevant changes
+
+13) Project Information and further development
+Adding Project information and analysis
 Update Files if relevant changes
