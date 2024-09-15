@@ -3,11 +3,11 @@
 # TITLE:            main_v5.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-09-05
+# DATE:             2024-09-14
 # USAGE:            ./main_v5.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          5.0.0
+# VERSION:          5.1.0
 #====================================================
 
 # Name of the file where seslected commands will be saved
@@ -22,8 +22,9 @@ category2=("systemctl" "mpstat" "free" "strace" "dstat_cpu" "dstat_mem")
 category3=("dstat_mem" "sysctl" "uptime" "top" "ps" "crontab" "journalctl" "timezone")
 category4=("ipaddr_show" "hostnamectl" "ss_ltpn" "date" "firewalld" "/proc/net/tcp")
 category5=("df" "iostat" "vmstat" "lsblk" "fdisk" "du" "/proc/mdstat" "/etc/fstab" "/proc/partitions")
+category6=("ftp_check" "ssh_check" "ip_check" "timezone_check" "spec._char_ip_check" "spec._char_timezone_check")
 
-options=("${category1[@]}" "${category2[@]}" "${category3[@]}" "${category4[@]}" "${category5[@]}")
+options=("${category1[@]}" "${category2[@]}" "${category3[@]}" "${category4[@]}" "${category5[@]}" "${category6[@]}")
 
 
 # Function to display current options
@@ -63,48 +64,21 @@ show_options() {
     echo "Category 1: Users and Groups"
     print_category category1[@]
 
-#    local index=1
-#    for opt in "${category1[@]}"; do
-#        echo "$index) $opt"
-#        ((index++))
-#    done
-
-
     echo -e "\nCategory 2: Essential Commands"
     print_category category2[@]
 
-
-#    for opt in "${category2[@]}"; do
-#        echo "$index) $opt"
-#        ((index++))
-#    done
-
-    echo -e "\nCategory 3: Essential Commands"
+    echo -e "\nCategory 3: Operations Deployment"
     print_category category3[@]
 
-
-#    for opt in "${category3[@]}"; do
-#        echo "$index) $opt"
-#        ((index++))
-#    done
-
-    echo -e "\nCategory 4: Essential Commands"
+    echo -e "\nCategory 4: Networking"
     print_category category4[@]
 
-
-#    for opt in "${category4[@]}"; do
-#        echo "$index) $opt"
-#        ((index++))
-#    done
-
-    echo -e "\nCategory 5: Essential Commands"
+    echo -e "\nCategory 5: Storage"
     print_category category5[@]
 
-
-#    for opt in "${category5[@]}"; do
-#        echo "$index) $opt"
-#        ((index++))
-#    done
+    echo -e "\nCategory 6: Checking for anomalies"
+    print_category category6[@]
+ 
 
     echo ""
     echo "q) Exit the program."
@@ -134,9 +108,10 @@ retrieve_and_update_options() {
     update_category_options "category3"
     update_category_options "category4"
     update_category_options "category5"
+    update_category_options "category6"
     
     # Rebuild the combined options array
-    options=("${category1[@]}" "${category2[@]}" "${category3[@]}" "${category4[@]}" "${category5[@]}")
+    options=("${category1[@]}" "${category2[@]}" "${category3[@]}" "${category4[@]}" "${category5[@]}" "${category6[@]}")
     
     fi
 }
