@@ -1,14 +1,17 @@
 #!/bin/bash
 #====================================================
-# TITLE:            tmux_panes_display_cmds_v2.sh
+# TITLE:            tmux_panes_display_cmds_v3.sh
 # DESCRIPTION:      Linux System Monitor
 # AUTHOR:           Sebastian Gommel
-# DATE:             2024-08-30
-# USAGE:            ./main_v4.sh
+# DATE:             2024-09-14
+# USAGE:            ./main_v5.sh
 # DEPENDENCIES:     No dependencies
 # LICENSE:          MIT License
-# VERSION:          3.0.0
+# VERSION:          3.1.0
 #====================================================
+
+# Name of file necessary to display anomalies
+LOGS_ANOMALIES_DETECTOR_SCRIPT="./logs_anomalies_detector_v2.sh"
 
 # Check if a command argument is provided
 
@@ -188,6 +191,31 @@ case "$COMMAND" in
     /proc/partitions)
         # Display info of partitions file
         exec_cmd="cat /proc/partitions | grep -v loop"
+        ;;
+# --------------New category anomalies---------------         
+    ftp_check)
+        # Display the dates of recent ftp anomalies
+        exec_cmd="$LOGS_ANOMALIES_DETECTOR_SCRIPT ftp"
+        ;;
+    ssh_check)
+        # Display the dates of recent ssh anomalies
+        exec_cmd="$LOGS_ANOMALIES_DETECTOR_SCRIPT ssh"
+        ;;
+    ip_check)
+        # Display the dates of recent ip anomalies
+        exec_cmd="$LOGS_ANOMALIES_DETECTOR_SCRIPT ip"
+        ;;
+    timezone_check)
+        # Display the dates of recent timezone anomalies
+        exec_cmd="$LOGS_ANOMALIES_DETECTOR_SCRIPT timezone"
+        ;;
+    spec._char_ip_check)
+        # Display the dates of recent special char ip anomalies
+        exec_cmd="$LOGS_ANOMALIES_DETECTOR_SCRIPT special_char_ip"
+        ;;
+    spec._char_timezone_check)
+        # Display the dates of recent special char timezone anomalies
+        exec_cmd="$LOGS_ANOMALIES_DETECTOR_SCRIPT special_char_timezone"
         ;;
     *)
         # Handle invalid command
